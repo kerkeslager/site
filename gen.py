@@ -1,6 +1,8 @@
 import collections
+import errno
 import os
 import os.path
+import shutil
 import string
 
 import post
@@ -16,10 +18,26 @@ target_index_filename = 'index.html'
 template_index_path = os.path.join(template_dir, template_index_filename)
 target_index_path = os.path.join(target_dir, target_index_filename)
 
+literal_dir_path = os.path.join(current_dir, 'literal')
+literal_filenames = os.listdir(literal_dir_path)
+
+for literal_filename in literal_filenames:
+    literal_file_path = os.path.join(literal_dir_path, literal_filename)
+    target_file_path = os.path.join(target_dir, literal_filename)
+    
+    try:
+        shutil.copytree(literal_file_path, target_file_path)
+    except OSError as e:
+        if e.errno == errno.ENOTDIR:
+            shutil.copyfile(literal_file_path, target_file_path)
+        else:
+            raise
+
 MENU = '''
 <a href='/'>Home</a>
+<a href='/about.html'>About</a>
 <a href='/blog.html'>Blog</a>
-<a href='https://www.github.com/kerkeslager'>GitHub</a>
+<a href='https://www.github.com/kerkeslager'>Git</a>
 '''
 
 with open(template_index_path, 'r') as template_index_file:
@@ -69,3 +87,4 @@ with open(blog_template_filename, 'r') as template_file:
 
     with open(target_blog_filename, 'w') as target_blog_file:
         target_blog_file.write(html)
+

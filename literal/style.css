@@ -1,0 +1,78 @@
+body {
+  width: 100%;
+  font-family: clear_sans_lightregular;
+}
+
+.homepage {
+  height: 100%;
+  display: table;
+  margin-left: auto;
+  margin-right: 0;
+}
+
+.homepage-links {
+  display: table-cell;
+  vertical-align: middle;
+}
+
+.homepage-link {
+  color: rgb(0,0,0);
+  display: block;
+  /*font-family: "Courier New", Courier, monospace;*/
+  font-size: 36px;
+  margin: 0.25em 0.25em 0.25em 0;
+  text-align: right;
+  text-decoration: none;
+}
+
+.homepage-link:hover {
+  text-decoration: underline overline;
+}
+
+@media (min-width: 150px) {
+  .homepage-link {
+    font-size: 42px;
+  }
+}
+
+@media (min-width: 200px) {
+  .homepage-link {
+    font-size: 48px;
+  }
+}
+
+@media (min-width: 250px) {
+  .homepage-link {
+    font-size: 56px;
+  }
+}
+
+@media (min-width: 300px) {
+  .homepage-link {
+    font-size: 64px;
+  }
+}
+
+@media (min-width: 350px) {
+  .homepage-link {
+    font-size: 72px;
+  }
+}
+
+@media (min-width: 400px) {
+  .homepage-link {
+    font-size: 84px;
+  }
+}
+
+@media (min-width: 450px) {
+  .homepage-link {
+    font-size: 96px;
+  }
+}
+
+@media (min-width: 500px) {
+  .homepage-link {
+    font-size: 110px;
+  }
+}
