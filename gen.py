@@ -12,6 +12,14 @@ current_dir = os.path.dirname(os.path.abspath(__file__))
 template_dir = os.path.join(current_dir, 'templates')
 target_dir = os.path.join(current_dir, 'target')
 
+try:
+    shutil.rmtree(target_dir)
+except e:
+    if e.errno != errno.ENOTDIR:
+        raise
+
+os.mkdir(target_dir)
+
 template_index_filename = 'index.html'
 target_index_filename = 'index.html'
 
@@ -49,6 +57,7 @@ with open(template_index_path, 'r') as template_index_file:
         target_index_file.write(html_index)
 
 target_posts_dir = os.path.join(target_dir, 'posts')
+os.mkdir(target_posts_dir)
 
 posts_dir = os.path.join(current_dir, 'posts')
 post_filenames = [fn for fn in os.listdir(posts_dir) if fn.endswith('.post')]
