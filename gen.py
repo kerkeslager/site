@@ -30,11 +30,11 @@ def mktree(root_path, tree):
 
 current_dir = os.path.dirname(os.path.abspath(__file__))
 template_dir = os.path.join(current_dir, 'templates')
-TARGET_DIR = os.path.join(current_dir, 'site')
+TARGET_DIR = os.path.join(current_dir, 'dest')
 
 rm_r_if_exists(TARGET_DIR)
 mktree(current_dir, {
-    'site': {
+    'dest': {
         'posts': {},
     },
 })
