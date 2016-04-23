@@ -15,8 +15,8 @@ def get_template(path):
 def rm_r_if_exists(path):
     try:
         shutil.rmtree(path)
-    except e:
-        if e.errno != errno.ENOTDIR:
+    except FileNotFoundError as e:
+        if e.errno != errno.ENOTDIR and e.errno != errno.ENOENT:
             raise
 
 def mktree(root_path, tree):
@@ -30,11 +30,11 @@ def mktree(root_path, tree):
 
 current_dir = os.path.dirname(os.path.abspath(__file__))
 template_dir = os.path.join(current_dir, 'templates')
-TARGET_DIR = os.path.join(current_dir, 'target')
+TARGET_DIR = os.path.join(current_dir, 'site')
 
 rm_r_if_exists(TARGET_DIR)
 mktree(current_dir, {
-    'target': {
+    'site': {
         'posts': {},
     },
 })
