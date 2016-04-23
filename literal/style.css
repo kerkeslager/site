@@ -1,6 +1,9 @@
 body {
   width: 100%;
-  margin: 1rem;
+  max-width: 600px;
+  padding: 1rem;
+  margin-left: auto;
+  margin-right: auto;
   font-family: clear_sans_lightregular;
 }
 
@@ -19,7 +22,6 @@ body {
 .homepage-link {
   color: rgb(0,0,0);
   display: block;
-  /*font-family: "Courier New", Courier, monospace;*/
   font-size: 36px;
   margin: 0.25em 0.25em 0.25em 0;
   text-align: right;
