@@ -1,0 +1,94 @@
+<post>
+  <title>Zero to HTTPS on DigitalOcean</title>
+  <author>David Kerkeslager</author>
+  <body>
+    <p>
+      I just set up this blog. I haven't done any server administration stuff in a while, so I had to update my skills to get it running. Here's a basic outline of what I did; I'll probably come back and update this the next time I set up a server, or even as I make changes to the server. There are lots of tutorials online that are pretty similar to this; this is mostly for me, so I don't have to find those tutorials.
+    </p>
+
+    <section>
+      <header>Creating the Server</header>
+      <p>
+        I used <a href='https://www.digitalocean.com/'>DigitalOcean</a> to set up the server. I won't go into this too deeply, because they have a pretty straightforward UI. Here are the configurtion options I chose:
+      </p>
+      <ul>
+        <li>Debian 8.3 x64</li>
+        <li>Turned on IPv6</li>
+        <li>Added my SSH Key</li>
+      </ul>
+    </section>
+
+    <section>
+      <header>SSH Local Configuration</header>
+      <p>
+        As a convenience for myself, I added a section to my <code>~/.ssh/config</code>. This allows me to SSH into the server just by typing <code>ssh servername</code>.
+      </p>
+      <code>Host servername             # The name you want to type after `ssh`
+    User root               # This is going to change later
+    HostName 12.34.56.78    # The IP Address of the server
+    IdentityFile ~/.ssh/key # The SSH key you added when setting up the server
+      </code>
+    </section>
+
+    <section>
+      <header>Creating a user with <code>sudo</code> privileges</header>
+      <p>
+        The basic settings don't have a secure environment to serve static files from (which is my goal). So we want to SSH into our server as <code>root</code> (the only user available on the system right now) and secure the server.
+      </p>
+      <p>
+        SSH into the server with <code>ssh servername</code> (<code>servername</code> should be the name of the server you set up in your SSH config). 
+      </p>
+      <p>
+        Next, we want to set up a user who can SSH into the server and use <code>sudo</code> so we don't have to operate as <code>root</code>. I created a user named <code>kerkeslager</code>:
+      </p>
+      <ol>
+        <li>Create a user using <code>adduser kerkeslager</code>.</li>
+        <li>Create a password<footnote>I used <a href='http://world.std.com/~reinhold/diceware.html'>DiceWare</a>.</footnote> and fill out the rest of your user's details.</li>
+        <li>Install <code>vim</code> with <code>apt-get install vim</code>. Then call <code>export VISUAL=vim; visudo</code> to edit your superusers file with <code>vim</code>. Under the <code>root</code> user's privilege specification, you'll want to add a line that looks like <code>kerkeslager ALL=(ALL:ALL) ALL</code>.</li>
+        <li>Create an SSH directory for your new user and move your SSH key into their <code>authorized_keys</code> so you can use that key to log in as that user, like so:
+        <br/><br/><code>mkdir /home/kerkeslager/.ssh
+cp ~/.ssh/authorized_keys /home/kerkeslager/.ssh/authorized_keys
+chmod 700 /home/kerkeslager/.ssh
+chmod 600 /home/kerkeslager/.ssh/authorized_keys
+chown -R kerkeslager:kerkeslager /home/kerkeslager/.ssh/</code></li>
+      </ol>
+      <p>
+        You should now be able to log off the server with <code>exit</code> and SSH in as the user you created. To do this all the time in the future, change <code>root</code> in your <code>~/.ssh/config</code> to the name of the user you created.
+      </p>
+    </section>
+    <section>
+      <header>Securing SSH</header>
+      <p>
+        Now that you're logged in as your new privileged user, update the software on the server with <code>sudo apt-get update && sudo apt-get dist-upgrade</code>. This gives you an opportunity to find out if you set up the privileges from the previous section correctly.
+      </p>
+      <p>
+        Next we'll want to configure SSH so to be a little more secure. Open <code>/etc/ssh/sshd_config</code> and make the following changes<footnote>A lot of guides online recommend changing the port on which the SSH daemon serves so that an attacker has to scan ports to find what port you're serving on. This is a classic example of <a href='https://en.wikipedia.org/wiki/Security_through_obscurity'>security through obscurity</a>. Surely an attacker capable of breaking into SSH is capable of scanning your ports for SSH. This only serves to inconience those who forget which port they configured after choosing to engage in this <a href='https://en.wikipedia.org/wiki/Security_theater'>security theater</a>.</footnote>:
+      </p>
+      <ol>
+        <li>Change <code>PermitRootLogin yes</code> to <code>PermitRootLogin no</code>. This prevents the <code>root</code> user from logging in.</li>
+        <li>Add <code>AllowUsers kerkeslager</code> to allow your user to log in.</li>
+        <li>Add <code>PasswordAuthentication no</code> to force users to log in with an SSH key, which is much more secure than a username and password.</li>
+        <li>Change <code>UsePAM yes</code> to <code>UsePAM no</code> to prevent it from using PAM to authenticate passwords.</li>
+      </ol>
+      <p>
+        Save the file and reload your config with <code>sudo service sshd reload</code>.
+      </p>
+    </section>
+    
+    <section>
+      <header>Setting up a firewall</header>
+      <p>
+        The biggest improvement since the last time I set up a server is the popularization of <a href='https://launchpad.net/ufw'>Uncomplicated Firewall</a>. This streamlines the process of locking down the server's <code>netfilter</code> settings significantly:
+      </p>
+      <ol>
+        <li><code>sudo apt-get install ufw</code> to install Uncomplicated Firewall.</li>
+        <li><code>sudo ufw default deny incoming</code> to only allow whitelisted incoming traffic.</li>
+        <li><code>sudo ufw default allow outgoing</code> to allow all outgoing traffic.</li>
+        <li><code>sudo ufw allow ssh</code> to allow SSH connections.</li>
+        <li><code>sudo ufw allow 80/tcp</code> and <code>sudo ufw allow 443/tcp</code> to allow HTTP and HTTPS respectively.</li>
+        <li>Code list your rules with <code>sudo ufw show added</code> and check them.</li>
+        <li><code>sudo ufw enable</code> to apply the changes, start the firewall, and set the rules to apply on reboot.</li>
+      </ol>
+    </section>
+  </body>
+</post>

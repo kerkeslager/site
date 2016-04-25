@@ -7,6 +7,15 @@ body {
   font-family: clear_sans_lightregular;
 }
 
+section > header {
+  font-size: 20px;
+}
+
+code {
+  white-space: pre;
+  font-size: 0.88em;
+}
+
 .homepage {
   height: 100%;
   display: table;
