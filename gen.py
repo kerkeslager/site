@@ -70,7 +70,7 @@ MENU = '''
 <a href='/'>Home</a>
 <a href='/about.html'>About</a>
 <a href='/blog.html'>Blog</a>
-<a href='https://www.github.com/kerkeslager'>Git</a>
+<a href='https://www.github.com/kerkeslager'>Code</a>
 '''
 
 index_template = get_template(template_index_path)
