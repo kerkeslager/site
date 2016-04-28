@@ -153,3 +153,15 @@ about_html = apply_base_template(
 
 with open(about_target_path, 'w') as about_target_file:
     about_target_file.write(about_html)
+
+file_not_found_template_path = os.path.join(template_dir, '404.html')
+file_not_found_template = get_template(file_not_found_template_path)
+file_not_found_target_path = os.path.join(TARGET_DIR, '404.html')
+
+file_not_found_html = apply_base_template(
+    '404 File Not Found',
+    file_not_found_template.substitute(menu = MENU),
+)
+
+with open(file_not_found_target_path, 'w') as file_not_found_target_file:
+    file_not_found_target_file.write(file_not_found_html)
