@@ -44,7 +44,9 @@ def read(s):
             assert match.group('attributes') == '' 
 
             open_tag = stack[-1].pop()
-            assert open_tag.tag == match.group('tag')
+            if open_tag.tag != match.group('tag'):
+                raise Exception('Open tag "{}" does not match close tag "{}"'.format(open_tag, match.group('tag')))
+
             stack[-1].append(Node(
                 tag = open_tag.tag,
                 attributes = open_tag.attributes,
