@@ -1,6 +1,7 @@
 <post>
   <title>Zero to HTTPS on DigitalOcean</title>
   <author>David Kerkeslager</author>
+  <published>2016-04-28T02:40:17</published>
   <body>
     <p>
       I just set up this blog. I haven't done any server administration stuff in a while, so I had to update my skills to get it running. Here's a basic outline of what I did; I'll probably come back and update this the next time I set up a server, or even as I make changes to the server. There are lots of tutorials online that are pretty similar to this; this is mostly for me, so I don't have to find those tutorials.

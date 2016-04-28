@@ -1,11 +1,12 @@
 import collections
+import datetime
 import string
 
 import footnotes
 import functional
 import sml
 
-Post = collections.namedtuple('Post', ['title','authors','body'])
+Post = collections.namedtuple('Post', ['title','authors','body', 'published'])
 
 def is_node_with_tag(node, tag):
     return isinstance(node, sml.Node) and node.tag == tag
@@ -19,6 +20,9 @@ def is_author(node):
 def is_body(node):
     return is_node_with_tag(node, 'body')
 
+def is_published(node):
+    return is_node_with_tag(node, 'published')
+
 def from_sml(s):
     tree = sml.read(s)
 
@@ -27,11 +31,16 @@ def from_sml(s):
     title = functional.find(is_title, tree.children).children[0]
     authors = [a.children[0] for a in filter(is_author, tree.children)]
     body = functional.find(is_body, tree.children)
+    published = datetime.datetime.strptime(
+        functional.find(is_published, tree.children).children[0],
+        "%Y-%m-%dT%H:%M:%S",
+    )
 
     return Post(
         title = title,
         authors = authors,
         body = body,
+        published = published,
     )
     
 def from_file(filename):
@@ -62,6 +71,7 @@ def to_html(post, menu):
     return POST_TEMPLATE.substitute(
         title = post.title,
         author = comma_separated_list(post.authors),
+        published = post.published.isoformat(),
         body = body_html,
         footnotes = footnote_html,
         menu = menu,

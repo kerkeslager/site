@@ -83,7 +83,8 @@ target_posts_dir = os.path.join(TARGET_DIR, 'posts')
 
 posts_dir = os.path.join(current_dir, 'posts')
 post_filenames = [fn for fn in os.listdir(posts_dir) if fn.endswith('.post')]
-post_links = []
+
+post_instances_and_target_paths = []
 
 for post_filename in post_filenames:
     post_path = os.path.join(posts_dir, post_filename)
@@ -91,6 +92,16 @@ for post_filename in post_filenames:
     target_post_filename = post_filename[:-4] + 'html'
     post_target_path = os.path.join(target_posts_dir, target_post_filename)
 
+    post_instances_and_target_paths.append((p, post_target_path))
+
+post_instances_and_target_paths = list(sorted(
+    post_instances_and_target_paths,
+    key = lambda piatp: piatp[0].published,
+    reverse = True,
+))
+post_links = []
+
+for p, post_target_path in post_instances_and_target_paths:
     with open(post_target_path, 'w') as f:
         f.write(apply_base_template(
             p.title,
@@ -101,6 +112,12 @@ for post_filename in post_filenames:
         tag = 'li',
         attributes = {},
         children = [
+            sml.Node(
+                tag = 'date',
+                attributes = {},
+                children = [p.published.date().isoformat()],
+            ),
+            '&nbsp;',
             sml.Node(
                 tag = 'a',
                 attributes = { 'href': '/posts/{}'.format(target_post_filename) },
