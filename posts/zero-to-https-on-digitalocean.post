@@ -1,6 +1,14 @@
 <post>
-  <title>Zero to HTTPS on DigitalOcean</title>
+  <title>Zero to HTTPS on DigitalOcean using NGINX and Let's Encrypt</title>
   <author>David Kerkeslager</author>
+  <keyword>DigitalOcean</keyword>
+  <keyword>HTTPS</keyword>
+  <keyword>Let's Encrypt</keyword>
+  <keyword>NGINX</keyword>
+  <keyword>server configuration</keyword>
+  <keyword>server administration</keyword>
+  <keyword>tutorial</keyword>
+  <description>A tutorial for setting up an HTTPS server on DigitalOcean with NGINX and Let's Encrypt</description>
   <published>2016-04-28T02:40:17</published>
   <body>
     <p>
@@ -8,7 +16,7 @@
     </p>
 
     <section>
-      <header>Creating the Server</header>
+      <h2>Creating the Server</h2>
       <p>
         I used <a href='https://www.digitalocean.com/'>DigitalOcean</a> to set up the server. I won't go into this too deeply, because they have a pretty straightforward UI. Here are the configurtion options I chose:
       </p>
@@ -20,7 +28,7 @@
     </section>
 
     <section>
-      <header>SSH Local Configuration</header>
+      <h2>SSH Local Configuration</h2>
       <p>
         As a convenience for myself, I added a section to my <code>~/.ssh/config</code>. This allows me to SSH into the server just by typing <code>ssh servername</code>.
       </p>
@@ -32,7 +40,7 @@
     </section>
 
     <section>
-      <header>Creating a user with <code>sudo</code> privileges</header>
+      <h2>Creating a user with <code>sudo</code> privileges</h2>
       <p>
         The basic settings don't have a secure environment to serve static files from (which is my goal). So we want to SSH into our server as <code>root</code> (the only user available on the system right now) and secure the server.
       </p>
@@ -58,7 +66,7 @@ chown -R kerkeslager:kerkeslager /home/kerkeslager/.ssh/</code></li>
       </p>
     </section>
     <section>
-      <header>Securing SSH</header>
+      <h2>Securing SSH</h2>
       <p>
         Now that you're logged in as your new privileged user, update the software on the server with <code>sudo apt-get update && sudo apt-get dist-upgrade</code>. This gives you an opportunity to find out if you set up the privileges from the previous section correctly.
       </p>
@@ -77,7 +85,7 @@ chown -R kerkeslager:kerkeslager /home/kerkeslager/.ssh/</code></li>
     </section>
     
     <section>
-      <header>Setting up a firewall</header>
+      <h2>Setting up a firewall</h2>
       <p>
         The biggest improvement since the last time I set up a server is the popularization of <a href='https://launchpad.net/ufw'>Uncomplicated Firewall</a>. This streamlines the process of locking down the server's <code>netfilter</code> settings significantly:
       </p>
@@ -93,7 +101,7 @@ chown -R kerkeslager:kerkeslager /home/kerkeslager/.ssh/</code></li>
     </section>
 
     <section>
-      <header>Setting up NGINX to serve over HTTP</header>
+      <h2>Setting up NGINX to serve over HTTP</h2>
       <p>
         I use NGINX to serve up static files. To install NGINX, do <code>sudo apt-get install -y nginx</code>. Start NGINX with <code>sudo service nginx start</code>.
       </p>
@@ -117,7 +125,7 @@ This isn't a production-worthy NGINX server, but we'll come back and fix it late
     </section>
 
     <section>
-      <header>DNS Configuration</header>
+      <h2>DNS Configuration</h2>
       <p>The way to do this is dependent on your domain name registrar. I used <a href='https://www.gandi.net/'>Gandi</a> to register <code>kerkeslager.com</code>. They have a tool for setting up your zone records, and so does every other domain name registrar I've used. Whatever tool you use, you'll want to set up A and AAAA records for your naked domain and www subdomain. A records point to your IPv4 address, while AAAA records point to your IPv6 address. For reasons why you want to use a www subdomain, see <a href='https://www.yes-www.org/why-use-www/'>Why use www?</a>. Whatever tools you use to set this up, your configuration should end up looking something like this:</p>
       <table>
         <tr>
@@ -158,7 +166,7 @@ This isn't a production-worthy NGINX server, but we'll come back and fix it late
     </section>
 
     <section>
-      <header>Getting certs from LetsEncrypt</header>
+      <h2>Getting certs from LetsEncrypt</h2>
       <p>Next I set up HTTPS with <a href='https://letsencrypt.org/'>Let's Encrypt</a>.</p>
       <p>
         To get the Let's Encrypt client you'll need to install <code>git</code> with <code>sudo apt-get install -y git</code>. Once you have this, you can obtain the Let's Encrypt client by running <code>git clone https://github.com/letsencrypt/letsencrypt</code>.
@@ -172,7 +180,7 @@ This isn't a production-worthy NGINX server, but we'll come back and fix it late
     </section>
 
     <section>
-      <header>Setting up NGINX to serve over HTTPS</header>
+      <h2>Setting up NGINX to serve over HTTPS</h2>
       <p>Finally, we need to set up NGINX to serve over HTTPS. To do this, go back and edit the site configuration you created, in my case <code>/var/www/kerkeslager.com</code>. Delete the existing server and replace it with this:<code>
 server {
         # Listen for HTTP requests on the naked domain or www subdomain

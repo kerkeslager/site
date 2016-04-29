@@ -6,7 +6,17 @@ import footnotes
 import functional
 import sml
 
-Post = collections.namedtuple('Post', ['title','authors','body', 'published'])
+Post = collections.namedtuple(
+    'Post',
+    [
+        'title',
+        'authors',
+        'keywords',
+        'description',
+        'body',
+        'published',
+    ],
+)
 
 def is_node_with_tag(node, tag):
     return isinstance(node, sml.Node) and node.tag == tag
@@ -17,11 +27,17 @@ def is_title(node):
 def is_author(node):
     return is_node_with_tag(node, 'author')
 
+def is_description(node):
+    return is_node_with_tag(node, 'description')
+
 def is_body(node):
     return is_node_with_tag(node, 'body')
 
 def is_published(node):
     return is_node_with_tag(node, 'published')
+
+def is_keyword(node):
+    return is_node_with_tag(node, 'keyword')
 
 def from_sml(s):
     tree = sml.read(s)
@@ -30,6 +46,8 @@ def from_sml(s):
 
     title = functional.find(is_title, tree.children).children[0]
     authors = [a.children[0] for a in filter(is_author, tree.children)]
+    keywords = [k.children[0] for k in filter(is_keyword, tree.children)]
+    description = functional.find(is_description, tree.children).children[0]
     body = functional.find(is_body, tree.children)
     published = datetime.datetime.strptime(
         functional.find(is_published, tree.children).children[0],
@@ -39,6 +57,8 @@ def from_sml(s):
     return Post(
         title = title,
         authors = authors,
+        keywords = keywords,
+        description = description,
         body = body,
         published = published,
     )

@@ -40,9 +40,12 @@ mktree(current_dir, {
 })
 
 BASE_TEMPLATE = get_template(os.path.join(template_dir, 'base.html'))
-def apply_base_template(title, body):
+def apply_base_template(title, authors, keywords, description, body):
     return BASE_TEMPLATE.substitute(
         title = title,
+        authors = ','.join(authors),
+        keywords = ','.join(keywords),
+        description = description,
         body = body,
     )
 
@@ -74,7 +77,13 @@ MENU = '''
 '''
 
 index_template = get_template(template_index_path)
-index_html = apply_base_template('Home', index_template.substitute(menu = MENU))
+index_html = apply_base_template(
+    'Home',
+    ['David Kerkeslager'],
+    [],
+    "David Kerkeslager's personal website",
+    index_template.substitute(menu = MENU),
+)
 
 with open(target_index_path, 'w') as target_index_file:
     target_index_file.write(index_html)
@@ -105,6 +114,9 @@ for p, post_target_path in post_instances_and_target_paths:
     with open(post_target_path, 'w') as f:
         f.write(apply_base_template(
             p.title,
+            p.authors,
+            p.keywords,
+            p.description,
             post.to_html(p, MENU),
         ))
 
@@ -132,6 +144,9 @@ target_blog_filename = os.path.join(TARGET_DIR, 'blog.html')
 blog_template = get_template(blog_template_filename)
 blog_html = apply_base_template(
     'Blog',
+    ['David Kerkeslager'],
+    ['blog,David Kerkeslager'],
+    "David Kerkeslager's blog",
     blog_template.substitute(
         menu = MENU,
         posts = ''.join(sml.write(pl) for pl in post_links),
@@ -148,6 +163,9 @@ about_target_path = os.path.join(TARGET_DIR, 'about.html')
 
 about_html = apply_base_template(
     'About',
+    ['David Kerkeslager'],
+    ['David Kerkeslager','kerkeslager.com'],
+    'About David Kerkeslager and his website',
     about_template.substitute(menu = MENU),
 )
 
@@ -160,6 +178,9 @@ file_not_found_target_path = os.path.join(TARGET_DIR, '404.html')
 
 file_not_found_html = apply_base_template(
     '404 File Not Found',
+    ['David Kerkeslager'],
+    ['error','404'],
+    '404 File not found',
     file_not_found_template.substitute(menu = MENU),
 )
 
