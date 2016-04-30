@@ -92,24 +92,24 @@ target_posts_dir = os.path.join(TARGET_DIR, 'posts')
 posts_dir = os.path.join(current_dir, 'posts')
 post_filenames = [fn for fn in os.listdir(posts_dir) if fn.endswith('.post')]
 
-post_instances_and_target_paths = []
+post_instances_and_target_filenames = []
 
 for post_filename in post_filenames:
     post_path = os.path.join(posts_dir, post_filename)
     p = post.from_file(post_path)
     target_post_filename = post_filename[:-4] + 'html'
-    post_target_path = os.path.join(target_posts_dir, target_post_filename)
 
-    post_instances_and_target_paths.append((p, post_target_path))
+    post_instances_and_target_filenames.append((p, target_post_filename))
 
 post_instances_and_target_paths = list(sorted(
-    post_instances_and_target_paths,
+    post_instances_and_target_filenames,
     key = lambda piatp: piatp[0].published,
     reverse = True,
 ))
 post_links = []
 
-for p, post_target_path in post_instances_and_target_paths:
+for p, target_post_filename in post_instances_and_target_paths:
+    post_target_path = os.path.join(target_posts_dir, target_post_filename)
     with open(post_target_path, 'w') as f:
         f.write(apply_base_template(
             p.title,
