@@ -70,7 +70,6 @@ for literal_filename in os.listdir(LITERAL_DIR):
             raise
 
 MENU = '''
-<a href='/'>Home</a>
 <a href='/about.html'>About</a>
 <a href='/blog.html'>Blog</a>
 <a href='https://www.github.com/kerkeslager'>Code</a>
@@ -78,7 +77,7 @@ MENU = '''
 
 index_template = get_template(template_index_path)
 index_html = apply_base_template(
-    'Home',
+    '::1',
     ['David Kerkeslager'],
     [],
     "David Kerkeslager's personal website",
