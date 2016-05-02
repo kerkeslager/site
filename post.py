@@ -39,6 +39,17 @@ def is_published(node):
 def is_keyword(node):
     return is_node_with_tag(node, 'keyword')
 
+def get_published(tree):
+    published_node = functional.find(is_published, tree.children, None)
+
+    if published_node == None:
+        return None
+
+    return datetime.datetime.strptime(
+        published_node.children[0],
+        "%Y-%m-%dT%H:%M:%S",
+    )
+
 def from_sml(s):
     tree = sml.read(s)
 
@@ -49,10 +60,7 @@ def from_sml(s):
     keywords = [k.children[0] for k in filter(is_keyword, tree.children)]
     description = functional.find(is_description, tree.children).children[0]
     body = functional.find(is_body, tree.children)
-    published = datetime.datetime.strptime(
-        functional.find(is_published, tree.children).children[0],
-        "%Y-%m-%dT%H:%M:%S",
-    )
+    published = get_published(tree)
 
     return Post(
         title = title,

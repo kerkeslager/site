@@ -97,6 +97,10 @@ post_instances_and_target_filenames = []
 for post_filename in post_filenames:
     post_path = os.path.join(posts_dir, post_filename)
     p = post.from_file(post_path)
+
+    if p.published == None:
+        continue
+
     target_post_filename = post_filename[:-4] + 'html'
 
     post_instances_and_target_filenames.append((p, target_post_filename))

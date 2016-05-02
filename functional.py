@@ -1,6 +1,11 @@
-def find(predicate, xs):
+_sentinel = object()
+
+def find(predicate, xs, default = _sentinel):
     for x in xs:
         if predicate(x):
             return x
 
-    raise Exception('No item found matching predicate')
+    if default == _sentinel:
+        raise Exception('No item found matching predicate')
+
+    return default
