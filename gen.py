@@ -156,6 +156,7 @@ blog_html = apply_base_template(
     ),
 )
 
+# TODO Generate About, Signals, and 404 from the pages/ directory
 
 with open(target_blog_filename, 'w') as target_blog_file:
     target_blog_file.write(blog_html)
@@ -174,6 +175,21 @@ about_html = apply_base_template(
 
 with open(about_target_path, 'w') as about_target_file:
     about_target_file.write(about_html)
+    
+signals_template_path = os.path.join(template_dir, 'signals.html')
+signals_template = get_template(signals_template_path)
+signals_target_path = os.path.join(TARGET_DIR, 'signals.html')
+
+signals_html = apply_base_template(
+    'Signals',
+    ['David Kerkeslager'],
+    ['Links'],
+    'Signals in the noise',
+    signals_template.substitute(menu = MENU),
+)
+
+with open(signals_target_path, 'w') as signals_target_file:
+    signals_target_file.write(signals_html)
 
 file_not_found_template_path = os.path.join(template_dir, '404.html')
 file_not_found_template = get_template(file_not_found_template_path)
