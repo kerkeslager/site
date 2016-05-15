@@ -71,7 +71,7 @@ with open(target_index_path, 'w') as target_index_file:
 posts_target_dir = os.path.join(TARGET_DIR, 'posts')
 posts_src_dir = os.path.join(current_dir, 'posts')
 
-post_links = blog.generate(posts_src_dir, posts_target_dir)
+post_links = list(blog.generate(posts_src_dir, posts_target_dir))
 
 blog_template_filename = os.path.join(template.template_dir, 'blog.html')
 target_blog_filename = os.path.join(TARGET_DIR, 'blog.html')

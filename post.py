@@ -52,7 +52,9 @@ def get_published(tree):
         "%Y-%m-%dT%H:%M:%S",
     )
 
-def from_sml(s, link_filename):
+def from_sml(s, **kwargs):
+    link = kwargs['link']
+
     tree = sml.read(s)
 
     assert tree.tag == 'post'
@@ -71,12 +73,23 @@ def from_sml(s, link_filename):
         description = description,
         body = body,
         published = published,
-        link_filename = link_filename,
+        link_filename = link,
     )
+
+def filename_to_url(filename):
+    if filename == None:
+        return None
+
+    return os.path.basename(filename)[:-4] + 'html'
     
 def from_file(filename):
+    link = filename_to_url(filename)
+
     with open(filename, 'r') as f:
-        return from_sml(f.read(), os.path.basename(filename)[:-4] + 'html')
+        return from_sml(
+            f.read(),
+            link = link,
+        )
 
 with open('templates/post.html','r') as post_template_file:
     POST_TEMPLATE = string.Template(post_template_file.read())
@@ -93,7 +106,33 @@ def comma_separated_list(xs):
 
     raise Exception()
 
-def to_html(post, menu):
+def get_traversal_links(first, prev, _next, last):
+    def fmt(url, content):
+        return "<a href='{}'>{}</a>".format(url,content)
+
+    if first == None:
+        first = ''
+    else:
+        first = fmt(first.link_filename, '&lt;&lt;')
+
+    if prev == None:
+        prev = ''
+    else:
+        prev = fmt(prev.link_filename, '&lt;')
+
+    if _next == None:
+        _next = ''
+    else:
+        _next = fmt(_next.link_filename, '&gt;')
+
+    if last == None:
+        last = ''
+    else:
+        last = fmt(last.link_filename, '&gt;&gt;')
+
+    return '&emsp;'.join(filter(lambda l: l != '', [first,prev,_next,last]))
+
+def to_html(post, menu, traversal_links):
     body_nodes, footnote_nodes = footnotes.extract_footnotes(post.body)
 
     body_html = ''.join(sml.write(body_node) for body_node in body_nodes.children)
@@ -106,6 +145,7 @@ def to_html(post, menu):
         body = body_html,
         footnotes = footnote_html,
         menu = menu,
+        traversal_links = traversal_links,
     )
 
 def filename_to_link(filename, post):
