@@ -104,3 +104,22 @@ def to_html(post, menu):
         footnotes = footnote_html,
         menu = menu,
     )
+
+def filename_to_link(filename, post):
+    return sml.Node(
+        tag = 'li',
+        attributes = {},
+        children = [
+            sml.Node(
+                tag = 'date',
+                attributes = {},
+                children = [post.published.date().isoformat()],
+            ),
+            '&nbsp;',
+            sml.Node(
+                tag = 'a',
+                attributes = { 'href': '/posts/{}'.format(filename) },
+                children = [post.title],
+            ),
+        ]
+    )

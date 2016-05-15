@@ -40,22 +40,6 @@ def generate(posts_src_dir, posts_target_dir):
                 post.to_html(p, menu.MENU),
             ))
         
-        post_links.append(sml.Node(
-            tag = 'li',
-            attributes = {},
-            children = [
-                sml.Node(
-                    tag = 'date',
-                    attributes = {},
-                    children = [p.published.date().isoformat()],
-                ),
-                '&nbsp;',
-                sml.Node(
-                    tag = 'a',
-                    attributes = { 'href': '/posts/{}'.format(target_post_filename) },
-                    children = [p.title],
-                ),
-            ]
-        ))
+        post_links.append(post.filename_to_link(target_post_filename, p))
 
     return post_links
