@@ -5,12 +5,10 @@ import os.path
 import shutil
 import string
 
-import post
+import blog
+import menu
 import sml
-
-def get_template(path):
-    with open(path, 'r') as f:
-        return string.Template(f.read())
+import template
 
 def rm_r_if_exists(path):
     try:
@@ -29,7 +27,6 @@ def mktree(root_path, tree):
         mktree(directory_path, contents)
 
 current_dir = os.path.dirname(os.path.abspath(__file__))
-template_dir = os.path.join(current_dir, 'templates')
 TARGET_DIR = os.path.join(current_dir, 'dest')
 
 rm_r_if_exists(TARGET_DIR)
@@ -39,20 +36,10 @@ mktree(current_dir, {
     },
 })
 
-BASE_TEMPLATE = get_template(os.path.join(template_dir, 'base.html'))
-def apply_base_template(title, authors, keywords, description, body):
-    return BASE_TEMPLATE.substitute(
-        title = title,
-        authors = ','.join(authors),
-        keywords = ','.join(keywords),
-        description = description,
-        body = body,
-    )
-
 template_index_filename = 'index.html'
 target_index_filename = 'index.html'
 
-template_index_path = os.path.join(template_dir, template_index_filename)
+template_index_path = os.path.join(template.template_dir, template_index_filename)
 target_index_path = os.path.join(TARGET_DIR, target_index_filename)
 
 LITERAL_DIR = os.path.join(current_dir, 'literal')
@@ -69,89 +56,34 @@ for literal_filename in os.listdir(LITERAL_DIR):
         else:
             raise
 
-MENU = '''
-<a href='/about.html'>About</a>
-<a href='/blog.html'>Blog</a>
-<a href='https://www.github.com/kerkeslager'>Code</a>
-'''
-
-index_template = get_template(template_index_path)
-index_html = apply_base_template(
+index_template = template.get_template(template_index_path)
+index_html = template.apply_base_template(
     '::1',
     ['David Kerkeslager'],
     [],
     "David Kerkeslager's personal website",
-    index_template.substitute(menu = MENU),
+    index_template.substitute(menu = menu.MENU),
 )
 
 with open(target_index_path, 'w') as target_index_file:
     target_index_file.write(index_html)
 
-target_posts_dir = os.path.join(TARGET_DIR, 'posts')
+posts_target_dir = os.path.join(TARGET_DIR, 'posts')
+posts_src_dir = os.path.join(current_dir, 'posts')
 
-posts_dir = os.path.join(current_dir, 'posts')
-post_filenames = [fn for fn in os.listdir(posts_dir) if fn.endswith('.post')]
+post_links = blog.generate(posts_src_dir, posts_target_dir)
 
-post_instances_and_target_filenames = []
-
-for post_filename in post_filenames:
-    post_path = os.path.join(posts_dir, post_filename)
-    p = post.from_file(post_path)
-
-    if p.published == None:
-        continue
-
-    target_post_filename = post_filename[:-4] + 'html'
-
-    post_instances_and_target_filenames.append((p, target_post_filename))
-
-post_instances_and_target_paths = list(sorted(
-    post_instances_and_target_filenames,
-    key = lambda piatp: piatp[0].published,
-    reverse = True,
-))
-post_links = []
-
-for p, target_post_filename in post_instances_and_target_paths:
-    post_target_path = os.path.join(target_posts_dir, target_post_filename)
-    with open(post_target_path, 'w') as f:
-        f.write(apply_base_template(
-            p.title,
-            p.authors,
-            p.keywords,
-            p.description,
-            post.to_html(p, MENU),
-        ))
-
-    post_links.append(sml.Node(
-        tag = 'li',
-        attributes = {},
-        children = [
-            sml.Node(
-                tag = 'date',
-                attributes = {},
-                children = [p.published.date().isoformat()],
-            ),
-            '&nbsp;',
-            sml.Node(
-                tag = 'a',
-                attributes = { 'href': '/posts/{}'.format(target_post_filename) },
-                children = [p.title],
-            ),
-        ]
-    ))
-    
-blog_template_filename = os.path.join(template_dir, 'blog.html')
+blog_template_filename = os.path.join(template.template_dir, 'blog.html')
 target_blog_filename = os.path.join(TARGET_DIR, 'blog.html')
 
-blog_template = get_template(blog_template_filename)
-blog_html = apply_base_template(
+blog_template = template.get_template(blog_template_filename)
+blog_html = template.apply_base_template(
     'Blog',
     ['David Kerkeslager'],
     ['blog,David Kerkeslager'],
     "David Kerkeslager's blog",
     blog_template.substitute(
-        menu = MENU,
+        menu = menu.MENU,
         posts = ''.join(sml.write(pl) for pl in post_links),
     ),
 )
@@ -161,46 +93,46 @@ blog_html = apply_base_template(
 with open(target_blog_filename, 'w') as target_blog_file:
     target_blog_file.write(blog_html)
 
-about_template_path = os.path.join(template_dir, 'about.html')
-about_template = get_template(about_template_path)
+about_template_path = os.path.join(template.template_dir, 'about.html')
+about_template = template.get_template(about_template_path)
 about_target_path = os.path.join(TARGET_DIR, 'about.html')
 
-about_html = apply_base_template(
+about_html = template.apply_base_template(
     'About',
     ['David Kerkeslager'],
     ['David Kerkeslager','kerkeslager.com'],
     'About David Kerkeslager and his website',
-    about_template.substitute(menu = MENU),
+    about_template.substitute(menu = menu.MENU),
 )
 
 with open(about_target_path, 'w') as about_target_file:
     about_target_file.write(about_html)
     
-signals_template_path = os.path.join(template_dir, 'signals.html')
-signals_template = get_template(signals_template_path)
+signals_template_path = os.path.join(template.template_dir, 'signals.html')
+signals_template = template.get_template(signals_template_path)
 signals_target_path = os.path.join(TARGET_DIR, 'signals.html')
 
-signals_html = apply_base_template(
+signals_html = template.apply_base_template(
     'Signals',
     ['David Kerkeslager'],
     ['Links'],
     'Signals in the noise',
-    signals_template.substitute(menu = MENU),
+    signals_template.substitute(menu = menu.MENU),
 )
 
 with open(signals_target_path, 'w') as signals_target_file:
     signals_target_file.write(signals_html)
 
-file_not_found_template_path = os.path.join(template_dir, '404.html')
-file_not_found_template = get_template(file_not_found_template_path)
+file_not_found_template_path = os.path.join(template.template_dir, '404.html')
+file_not_found_template = template.get_template(file_not_found_template_path)
 file_not_found_target_path = os.path.join(TARGET_DIR, '404.html')
 
-file_not_found_html = apply_base_template(
+file_not_found_html = template.apply_base_template(
     '404 File Not Found',
     ['David Kerkeslager'],
     ['error','404'],
     '404 File not found',
-    file_not_found_template.substitute(menu = MENU),
+    file_not_found_template.substitute(menu = menu.MENU),
 )
 
 with open(file_not_found_target_path, 'w') as file_not_found_target_file:
