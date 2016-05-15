@@ -17,20 +17,18 @@ def generate(posts_src_dir, posts_target_dir):
         if p.published == None:
             continue
         
-        target_post_filename = post_filename[:-4] + 'html'
-        
-        post_instances_and_target_filenames.append((p, target_post_filename))
+        post_instances_and_target_filenames.append(p)
 
     post_instances_and_target_paths = list(sorted(
         post_instances_and_target_filenames,
-        key = lambda piatp: piatp[0].published,
+        key = lambda piatp: piatp.published,
         reverse = True,
     ))
 
     post_links = []
 
-    for p, target_post_filename in post_instances_and_target_paths:
-        post_target_path = os.path.join(posts_target_dir, target_post_filename)
+    for p in post_instances_and_target_paths:
+        post_target_path = os.path.join(posts_target_dir, p.link_filename)
         with open(post_target_path, 'w') as f:
             f.write(template.apply_base_template(
                 p.title,
@@ -40,6 +38,6 @@ def generate(posts_src_dir, posts_target_dir):
                 post.to_html(p, menu.MENU),
             ))
         
-        post_links.append(post.filename_to_link(target_post_filename, p))
+        post_links.append(post.filename_to_link(p.link_filename, p))
 
     return post_links

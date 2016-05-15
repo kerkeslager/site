@@ -1,5 +1,6 @@
 import collections
 import datetime
+import os.path
 import string
 
 import footnotes
@@ -15,6 +16,7 @@ Post = collections.namedtuple(
         'description',
         'body',
         'published',
+        'link_filename',
     ],
 )
 
@@ -50,7 +52,7 @@ def get_published(tree):
         "%Y-%m-%dT%H:%M:%S",
     )
 
-def from_sml(s):
+def from_sml(s, link_filename):
     tree = sml.read(s)
 
     assert tree.tag == 'post'
@@ -69,11 +71,12 @@ def from_sml(s):
         description = description,
         body = body,
         published = published,
+        link_filename = link_filename,
     )
     
 def from_file(filename):
     with open(filename, 'r') as f:
-        return from_sml(f.read())
+        return from_sml(f.read(), os.path.basename(filename)[:-4] + 'html')
 
 with open('templates/post.html','r') as post_template_file:
     POST_TEMPLATE = string.Template(post_template_file.read())
