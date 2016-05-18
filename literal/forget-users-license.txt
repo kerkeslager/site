@@ -1,0 +1,14 @@
+FORGET USERS LICENSE
+
+Copyright (c) <YEAR>, <OWNER>
+All rights reserved.
+
+Redistribution and use in source and binary forms, with or without
+modification, are not permitted.
+
+Permission is not granted to read, use, modify, talk about, or even
+admit the existence of source or binary. Permission is not granted
+to even read this license. What are you doing here?
+
+If you want to use the source or binary forms, you'll just have to
+do it illegally.
