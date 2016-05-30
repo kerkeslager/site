@@ -1,0 +1,13 @@
+<post>
+  <title>Merging Git Repositories</title>
+  <author>David Kerkeslager</author>
+  <keyword>git</keyword>
+  <description>Why stop at merging branches when you can merge whole repos?</description>
+  <published>2016-05-30T19:36:00</published>
+  <body>
+    <p>Periodically, I go on my GitHub account and delete a bunch of repos. I dabble a lot in my learning and version it all, so I quite frequently have a bunch of repos which only contain half-baked, abandoned code. This time, instead of just deleting the repos, I decided to move them into the "sandbox" repo I've had for a long time.</p>
+    <p>For a few repos, I did <code>git clone git@github.com:kerkeslager/repo.git</code> from inside the <code>sandbox</code> repo. Then I made a mistake: I typed <code>git checkout git@github.com:kerkeslager/repo.git</code><footnote>Even years after switching from SVN to git, some part of my brain still has to translate <code>checkout</code> to <code>clone</code> whenever I clone a repo.</footnote></p>
+    <p>It worked! Sort of... I had a merge conflict on the <code>.gitignore</code>s of the two projects, but all the files were there, in my <code>sandbox</code> repo with their complete histories from the previous repo.</p>
+    <p>Of course, the structure of the resulting repo when you mash two repos together is a mess, so I reverted the change and made a subdirectory before merging again. But this was a valuable insight into the way git works.<footnote>In a way, all git repos are just branches off the same root!</footnote> I will never have to lose the history of my files to delete a repo ever again!</p>
+  </body>
+</post>
