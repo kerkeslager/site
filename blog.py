@@ -26,31 +26,42 @@ def generate(posts_src_dir, posts_target_dir):
     ))
 
     if len(post_list) > 0:
-        first_post = post_list[0]
-        last_post = post_list[-1]
+        newest_post = post_list[0]
+        oldest_post = post_list[-1]
 
     else:
-        first_post = None
-        last_post = None
+        newest_post = None
+        oldest_post = None
         
-    first_posts = [None] + ([first_post] * (len(post_list) - 1))
-    previous_posts = [None] + post_list[:-1]
-    next_posts = post_list[1:] + [None]
-    last_posts = ([last_post] * (len(post_list) - 1)) + [None]
+    oldest_post_list = ([oldest_post] * (len(post_list) - 1)) + [None]
+    previous_post_list = post_list[1:] + [None]
+    next_post_list = [None] + post_list[:-1]
+    newest_post_list = [None] + ([newest_post] * (len(post_list) - 1))
 
-    zipped = zip(first_posts, previous_posts, post_list, next_posts, last_posts)
+    zipped = zip(
+        oldest_post_list,
+        previous_post_list,
+        post_list,
+        next_post_list,
+        newest_post_list,
+    )
 
-    for first_p, prev_p, p, next_p, last_p in zipped:
-        post_target_path = os.path.join(posts_target_dir, p.link_filename)
-        traversal_links = post.get_traversal_links(first_p, prev_p, next_p, last_p)
+    for oldest_post, previous_post, current_post, next_post, newest_post in zipped:
+        post_target_path = os.path.join(posts_target_dir, current_post.link_filename)
+        traversal_links = post.get_traversal_links(
+            oldest_post,
+            previous_post,
+            next_post,
+            newest_post,
+        )
 
         with open(post_target_path, 'w') as f:
             f.write(template.apply_base_template(
-                p.title,
-                p.authors,
-                p.keywords,
-                p.description,
-                post.to_html(p, menu.MENU, traversal_links),
+                current_post.title,
+                current_post.authors,
+                current_post.keywords,
+                current_post.description,
+                post.to_html(current_post, menu.MENU, traversal_links),
             ))
         
-        yield post.filename_to_link(p.link_filename, p)
+        yield post.filename_to_link(current_post.link_filename, current_post)
