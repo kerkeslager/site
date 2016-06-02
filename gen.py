@@ -88,52 +88,58 @@ blog_html = template.apply_base_template(
     ),
 )
 
-# TODO Generate About, Signals, and 404 from the pages/ directory
-
 with open(target_blog_filename, 'w') as target_blog_file:
     target_blog_file.write(blog_html)
 
-about_template_path = os.path.join(template.template_dir, 'about.html')
-about_template = template.get_template(about_template_path)
-about_target_path = os.path.join(TARGET_DIR, 'about.html')
+# TODO Generate About, Signals, and 404 from the pages/ directory
 
-about_html = template.apply_base_template(
-    'About',
-    ['David Kerkeslager'],
-    ['David Kerkeslager','kerkeslager.com'],
-    'About David Kerkeslager and his website',
-    about_template.substitute(menu = menu.MENU),
+Page = collections.namedtuple(
+    'Page',
+    [
+        'template_name',
+        'title',
+        'authors',
+        'keywords',
+        'description',
+    ],
 )
 
-with open(about_target_path, 'w') as about_target_file:
-    about_target_file.write(about_html)
-    
-signals_template_path = os.path.join(template.template_dir, 'signals.html')
-signals_template = template.get_template(signals_template_path)
-signals_target_path = os.path.join(TARGET_DIR, 'signals.html')
+pages = [
+    Page(
+        template_name = 'about.html',
+        title = 'About',
+        authors = ['David Kerkeslager'],
+        keywords = ['David Kerkeslager','kerkeslager.com'],
+        description = 'About David Kerkeslager and his website',
+    ),
+    Page(
+        template_name = 'signals.html',
+        title = 'Signals',
+        authors = ['David Kerkeslager'],
+        keywords = ['Links'],
+        description = 'Signals in the noise',
+    ),
+    Page(
+        template_name = '404.html',
+        title = '404 File Not Found',
+        authors = ['David Kerkeslager'],
+        keywords = ['error','404'],
+        description = '404 File not found',
+    ),
+]
 
-signals_html = template.apply_base_template(
-    'Signals',
-    ['David Kerkeslager'],
-    ['Links'],
-    'Signals in the noise',
-    signals_template.substitute(menu = menu.MENU),
-)
+for page in pages:
+    template_path = os.path.join(template.template_dir, page.template_name)
+    templ = template.get_template(template_path)
+    target_path = os.path.join(TARGET_DIR, page.template_name)
 
-with open(signals_target_path, 'w') as signals_target_file:
-    signals_target_file.write(signals_html)
+    html = template.apply_base_template(
+        page.title,
+        page.authors,
+        page.keywords,
+        page.description,
+        templ.substitute(menu = menu.MENU),
+    )
 
-file_not_found_template_path = os.path.join(template.template_dir, '404.html')
-file_not_found_template = template.get_template(file_not_found_template_path)
-file_not_found_target_path = os.path.join(TARGET_DIR, '404.html')
-
-file_not_found_html = template.apply_base_template(
-    '404 File Not Found',
-    ['David Kerkeslager'],
-    ['error','404'],
-    '404 File not found',
-    file_not_found_template.substitute(menu = menu.MENU),
-)
-
-with open(file_not_found_target_path, 'w') as file_not_found_target_file:
-    file_not_found_target_file.write(file_not_found_html)
+    with open(target_path, 'w') as target_file:
+        target_file.write(html)
