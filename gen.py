@@ -113,6 +113,13 @@ pages = [
         description = 'About David Kerkeslager and his website',
     ),
     Page(
+        template_name = 'card.html',
+        title = 'Card',
+        authors = ['David Kerkeslager'],
+        keywords = ['Links'],
+        description = 'Business Card',
+    ),
+    Page(
         template_name = 'signals.html',
         title = 'Signals',
         authors = ['David Kerkeslager'],
