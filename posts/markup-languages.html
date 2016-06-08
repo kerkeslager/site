@@ -1,0 +1,22 @@
+<post>
+  <title>Markup Languages</title>
+  <author>David Kerkeslager<author>
+  <keyword>markup</keyword>
+  <keyword>language</keyword>
+  <description>Fundamental unsolved problems in markup languages</description>
+  <body>
+    <p>There has been a lot of discussion lately about the inadequacies of current markup languages. I have started in on a few blogs over the years and have always been dissatisfied with the composition and markup tools available to me. For this blog I decided to write a custom markup language because the existing markup languages frustrated me, so I've spent a lot of time thinking about this problem and trying to solve it. Here's a snapshot of my current thoughts on what needs to be solved:</p>
+    <h2>Lack of separation between presentation and semantics</h2>
+    <p>When people use a <code>h6</code> tag in HTML, it rarely means that it's under <code>h1</code> through <code>h5</code>. Instead, it means that the person marking up the content wanted the header to be <em>smaller</em> than an <code>h5</code> header. So instead of styling it smaller in CSS, they demoted the header to a lower subheader.</p>
+    <p>The effects of this are a huge loss in flexibility. Since we can no longer trust the semantic meaning of a sixth-level header, we can't easily generate a table of contents from the headers. If a report and bibliography are semantically marked up, they can be easily output in APA or MLA format without change to the markup. If a book were marked up semantically with chapters, it could easily be presented as a PDF or as a single webpage or as a webpage per chapter with a page for the table of contents, again without changing the semantic markup.</p>
+    <p>The coupling of semantics and presentation runs deep in HTML. Even when we separated the CSS from the HTML, we have to link it in the header. We can't present the same HTML with different CSS for different situations, because we have hard-coded the CSS into the HTML.</p>
+    <p>This problem is inherited by all the minimal markup languages which compile to HTML, such as Markdown. Other languages which do not compile to HTML rarely even attempt to separate semantics and presentation.</p>
+    <h2>Lack of interoperability and specialization</h2>
+    <p>This problem is twofold:</p>
+    <ol>
+      <li>Markup languages try to do everything instead of specializing.</li>
+      <li>Markup languages rarely allow embedding or linking to other markup languages.</li>
+    </ol>
+    <p>For example, HTML tries to support math with MathML, but abjectly fails. MathML is far too heavyweight for composition by hand. Meanwhile, LaTeX is extremely good at marking up math, but the mathematical markup capabilities are embedded in a larger language which is equally complex to HTML. There are tools (MathJax) which solve this problem by allowing you to embed LaTeX into HTML, but this sort of embeddable specialization is rarely baked into a markup language by default.</p>
+  </body>
+</post>
