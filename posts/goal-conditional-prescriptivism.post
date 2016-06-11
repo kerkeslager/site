@@ -57,6 +57,7 @@
     
     Soft power
     - Basically prescriptive power derived from shared or compatible goals (and likely some ability to achieve those goals).
+    - Is there some relation between soft power and intrinsic goals, and hard power and extrinsic goals? Not sure.
 
     A Dictionary of Modern American Usage by Bryan A. Garner
     - When DFW claims that Garner is a technocrat, he's describing that Garner has both:
@@ -70,9 +71,27 @@
         - A deeper understanding yields that commonly-used words are commonly-used because they are used in the dialects of many Discourse Communities
         - This yields that commonly-used words are poorly-suited for communicating the speaker/writer's membership in a Discourse Community
         - The upside is that the language becomes accessible to people in a wide variety of Discourse Communities
-        - The downside is that 
+        - The downside is that some discourse communities legitimately have more expertise on certain subjects (i.e. medical community with medicine):
+          - This leads to terms with specific meanings (i.e. break vs fracture in medicine <- TODO come up with an example where I actually know what I'm talking about)
+          - This jargon allows talking about large ideas succinctly (i.e. computer programmers know what a "relational database" is, but expressing the entirety of that concept even as a definition in Munroe's basic English would be hard, while mentioning it in passing while talking about, say, blockchain storage, would be entirely impractical).
+          - An alternative technique for broadening your audience is to thoroughly define the jargon terms you're using before using them. Clearly delimiting definitions allows an expert reader to skip the definitions, while a non-expert reader can read the definitions.
+          - Footnotes definining terms or inclusion of a glossary can also achieve this goal, but forces an inexpert reader to interrupt the flow of your argument to read a footnote or look a term up in the glossary.
 
-    - Assuming the shared goal of participating in Discourse Communities where Standard Written English communicates membership:
-        - Are 
+
+    - Assuming the shared goal of participating in Discourse Communities where Standard Written English communicates membership, what can we say?
+
+    Extrinsic versus Intrinsic Motivations
+    - Might depression arise from a lack of intrinsic motivations and an abundance of extrinsic motivations?
+    - TODO Read Deci
+    - TODO Read Yudkowski's Introduction to the Neuroscience of Human Motivation
+
+    Meta-goals:
+    - Meta-goals are goals that arise from your intrinsic goals because they help you achieve multiple intrinsic goals
+    - i.e. Money helps achieve many goals
+    - Some meta-goals are so pervasive that they've worked their way into our biology, i.e. cooperation with other humans is so successful a strategy for achieving goals that it has worked itself into our biology and become an intrinsic goal for many (most?) people.
+
+    Widespread intrinsic goals (TODO Come up with a better term for this):
+    - Generally driven by Maslowe/Glasser's needs
+    - i.e. It is almost everyone's intrinsic goal to have their basic physical needs met (food, water, shelter, etc.)
   </notes>
 </post>
